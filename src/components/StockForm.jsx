@@ -6,6 +6,7 @@ export function StockForm({ stock, onSubmit, onCancel }) {
     name: '',
     quantity: 1,
     buyPrice: 0,
+    currentPrice: 0
   });
 
   useEffect(() => {
@@ -21,7 +22,13 @@ export function StockForm({ stock, onSubmit, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    // Generate random current price with ±50% variation from buy price
+    const variation = (Math.random() - 0.5) * 1; // Random value between -0.5 and 0.5
+    const randomCurrentPrice = formData.buyPrice * (1 + variation);
+    onSubmit({
+      ...formData,
+      currentPrice: parseFloat(randomCurrentPrice.toFixed(2))
+    });
   };
 
   return (
