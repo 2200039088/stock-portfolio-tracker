@@ -1,6 +1,6 @@
-import { API_CONFIG } from './config';
-import { handleApiError, delay } from './utils';
-import { mockStocks } from './mockData';
+import { API_CONFIG } from "./config";
+import { handleApiError, delay } from "./utils";
+import { mockStocks } from "./mockData";
 
 class StockApi {
   async fetchStocks() {
@@ -9,9 +9,9 @@ class StockApi {
         await delay(API_CONFIG.mockDelay);
         return [...mockStocks];
       }
-      
+
       const response = await fetch(`${API_CONFIG.baseUrl}/stocks`);
-      if (!response.ok) throw new Error('Failed to fetch stocks');
+      if (!response.ok) throw new Error("Failed to fetch stocks");
       return response.json();
     } catch (error) {
       throw handleApiError(error);
@@ -22,21 +22,17 @@ class StockApi {
     try {
       if (API_CONFIG.mockEnabled) {
         await delay(API_CONFIG.mockDelay);
-        const newStock = {
-          ...stock,
-          id: Math.random().toString(36).substr(2, 9),
-          currentPrice: stock.buyPrice * 1.1
-        };
-        mockStocks.push(newStock);
-        return newStock;
+
+        mockStocks.push(stock);
+        return stock;
       }
 
       const response = await fetch(`${API_CONFIG.baseUrl}/stocks`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(stock),
       });
-      if (!response.ok) throw new Error('Failed to add stock');
+      if (!response.ok) throw new Error("Failed to add stock");
       return response.json();
     } catch (error) {
       throw handleApiError(error);
@@ -47,23 +43,25 @@ class StockApi {
     try {
       if (API_CONFIG.mockEnabled) {
         await delay(API_CONFIG.mockDelay);
-        const index = mockStocks.findIndex(s => s.id === id);
-        if (index === -1) throw new Error('Stock not found');
-        
+        const index = mockStocks.findIndex((s) => s.id === id);
+        if (index === -1) throw new Error("Stock not found");
+
         mockStocks[index] = {
           ...mockStocks[index],
           ...stockData,
-          currentPrice: stockData.buyPrice ? stockData.buyPrice * 1.1 : mockStocks[index].currentPrice
+          currentPrice: stockData.buyPrice
+            ? stockData.buyPrice * 1.1
+            : mockStocks[index].currentPrice,
         };
         return mockStocks[index];
       }
 
       const response = await fetch(`${API_CONFIG.baseUrl}/stocks/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(stockData),
       });
-      if (!response.ok) throw new Error('Failed to update stock');
+      if (!response.ok) throw new Error("Failed to update stock");
       return response.json();
     } catch (error) {
       throw handleApiError(error);
@@ -74,16 +72,16 @@ class StockApi {
     try {
       if (API_CONFIG.mockEnabled) {
         await delay(API_CONFIG.mockDelay);
-        const index = mockStocks.findIndex(s => s.id === id);
-        if (index === -1) throw new Error('Stock not found');
+        const index = mockStocks.findIndex((s) => s.id === id);
+        if (index === -1) throw new Error("Stock not found");
         mockStocks.splice(index, 1);
         return;
       }
 
       const response = await fetch(`${API_CONFIG.baseUrl}/stocks/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-      if (!response.ok) throw new Error('Failed to delete stock');
+      if (!response.ok) throw new Error("Failed to delete stock");
     } catch (error) {
       throw handleApiError(error);
     }
