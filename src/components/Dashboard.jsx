@@ -1,7 +1,10 @@
 import React from 'react';
 import { LineChart, TrendingUp, PieChart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export function Dashboard({ stocks, metrics }) {
+  const navigate = useNavigate();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <div className="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-200 border border-purple-100">
@@ -25,13 +28,16 @@ export function Dashboard({ stocks, metrics }) {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-200 border border-purple-100">
+      <div 
+        className="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-all duration-200 border border-purple-100 cursor-pointer"
+        onClick={() => navigate('/distribution')}
+      >
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-purple-800">Distribution</h3>
           <PieChart className="text-purple-500" size={24} />
         </div>
         <div className="space-y-3">
-          {metrics.portfolioDistribution.map(({ symbol, percentage }) => (
+          {metrics.portfolioDistribution.slice(0, 3).map(({ symbol, percentage }) => (
             <div key={symbol} className="flex justify-between items-center">
               <span className="text-sm font-medium text-purple-600">{symbol}</span>
               <div className="flex items-center">
@@ -45,6 +51,11 @@ export function Dashboard({ stocks, metrics }) {
               </div>
             </div>
           ))}
+          {metrics.portfolioDistribution.length > 3 && (
+            <p className="text-sm text-purple-600 text-center mt-2">
+              Click to view all {metrics.portfolioDistribution.length} stocks
+            </p>
+          )}
         </div>
       </div>
     </div>

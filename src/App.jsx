@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Dashboard } from './components/Dashboard';
 import { StockList } from './components/StockList';
 import { StockForm } from './components/StockForm';
+import { PortfolioDistribution } from './components/PortfolioDistribution';
+import { Footer } from './components/Footer';
 import { stockApi } from './services/api';
 import { calculateMetrics } from './utils/metrics';
 import { Plus } from 'lucide-react';
 
-function App() {
+function MainDashboard() {
   const [stocks, setStocks] = useState([]);
   const [selectedStock, setSelectedStock] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -75,7 +78,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100 p-8 pb-16">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">
@@ -121,6 +124,20 @@ function App() {
         />
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <div className="relative min-h-screen">
+        <Routes>
+          <Route path="/" element={<MainDashboard />} />
+          <Route path="/distribution" element={<PortfolioDistribution />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
